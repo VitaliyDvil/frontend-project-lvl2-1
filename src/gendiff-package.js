@@ -20,23 +20,6 @@ const genDiff = (firstFilePath, secondFilePath) => {
   const sortedKeys = allkeys.sort();
 
   const result = sortedKeys.reduce((acc, key) => {
-    // 1
-    // if (has(firstFile, key) && has(secondFile,key)) {
-    //   if (get(firstFile, key) === get(secondFile, key)) {
-    //     acc.push(`   ${key}: ${firstFile[key]}`)
-    //   } else {
-    //     acc.push(` - ${key}: ${firstFile[key]}`);
-    //     acc.push(` + ${key}: ${secondFile[key]}`);
-    //   }
-    // }
-    // if (has(firstFile, key) && !has(secondFile, key)) {
-    //   acc.push(` - ${key}: ${firstFile[key]}`);
-    // }
-    // if (!has(firstFile, key) && has(secondFile, key)) {
-    //   acc.push(` + ${key}: ${secondFile[key]}`)
-    // }
-    // return acc;
-    // 2
     if (has(firstFile, key) && !has(secondFile, key)) {
       acc.push(` - ${key}: ${firstFile[key]}`);
       return acc;
