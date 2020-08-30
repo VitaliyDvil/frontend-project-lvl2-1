@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import lodash from 'lodash';
-const { has, union } = lodash;
+const { keys, has, union } = lodash;
 
 const getProcessedFile = (relativeFilePath) => {
   const filePath = path.resolve(process.cwd(), relativeFilePath);
@@ -10,29 +10,33 @@ const getProcessedFile = (relativeFilePath) => {
 };
 
 const getUnionSortedKeys = (firstFile, secondFile) => {
-  const firstFileKeys = Object.keys(firstFile);
-  const secondFileKeys = Object.keys(secondFile);
-  
-  const allkeys = union(firstFileKeys, secondFileKeys);
+  const allkeys = union(keys(firstFile), keys(secondFile));
   return allkeys.sort();
 };
 
-const genDiff = (firstFilePath, secondFilePath) => {
+const genDiff = (firstFilePath, secondFilePath) => { 
   const firstFile = getProcessedFile(firstFilePath);
   const secondFile = getProcessedFile(secondFilePath);
 
   const unionSortedKeys = getUnionSortedKeys(firstFile, secondFile);
+  const result = unionSortedKeys.reduce((acc, key) => {    
+    const firstFileValue = firstFile[key];
+    const secondFileValue = secondFile[key];
+    if (!has(firstFile, key)) {
+      acc.push(` + ${key}: ${secondFileValue}`);
+      return acc;
+    }
+    if (!has(secondFile, key)) {
+      acc.push(` - ${key}: ${firstFileValue}`);
+      return acc;
+    }
 
-  const result = unionSortedKeys.reduce((acc, key) => {
-    if (has(firstFile, key) && !has(secondFile, key)) {
-      acc.push(` - ${key}: ${firstFile[key]}`);
-    } else if (!has(firstFile, key) && has(secondFile, key)) {
-      acc.push(` + ${key}: ${secondFile[key]}`);
-    } else if (firstFile[key] !== secondFile[key]) {
-      acc.push(` - ${key}: ${firstFile[key]}`);
-      acc.push(` + ${key}: ${secondFile[key]}`);
-    } else if (firstFile[key] === secondFile[key]) {
-      acc.push(`   ${key}: ${firstFile[key]}`);
+    if (firstFileValue === secondFileValue) {
+      acc.push(`   ${key}: ${firstFileValue}`);
+    }
+    if (firstFileValue !== secondFileValue) {
+      acc.push(` - ${key}: ${firstFileValue}`);
+      acc.push(` + ${key}: ${secondFileValue}`);
     }
     return acc;
   }, []);
