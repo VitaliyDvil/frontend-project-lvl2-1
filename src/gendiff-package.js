@@ -9,34 +9,32 @@ const getProcessedFile = (relativeFilePath) => {
   return JSON.parse(file);
 };
 
-const genDiff = (firstFilePath, secondFilePath) => {
-  const firstFile = getProcessedFile(firstFilePath);
-  const secondFile = getProcessedFile(secondFilePath);
-  
+const getUnionSortedKeys = (firstFile, secondFile) => {
   const firstFileKeys = Object.keys(firstFile);
   const secondFileKeys = Object.keys(secondFile);
   
   const allkeys = union(firstFileKeys, secondFileKeys);
-  const sortedKeys = allkeys.sort();
+  return allkeys.sort();
+};
 
-  const result = sortedKeys.reduce((acc, key) => {
+const genDiff = (firstFilePath, secondFilePath) => {
+  const firstFile = getProcessedFile(firstFilePath);
+  const secondFile = getProcessedFile(secondFilePath);
+
+  const unionSortedKeys = getUnionSortedKeys(firstFile, secondFile);
+
+  const result = unionSortedKeys.reduce((acc, key) => {
     if (has(firstFile, key) && !has(secondFile, key)) {
       acc.push(` - ${key}: ${firstFile[key]}`);
-      return acc;
-    }
-    if (!has(firstFile, key) && has(secondFile, key)) {
-      acc.push(` + ${key}: ${secondFile[key]}`)
-      return acc;
-    }
-    if (firstFile[key] !== secondFile[key]) {
+    } else if (!has(firstFile, key) && has(secondFile, key)) {
+      acc.push(` + ${key}: ${secondFile[key]}`);
+    } else if (firstFile[key] !== secondFile[key]) {
       acc.push(` - ${key}: ${firstFile[key]}`);
       acc.push(` + ${key}: ${secondFile[key]}`);
-      return acc;
-    }
-    if (firstFile[key] === secondFile[key]) {
+    } else if (firstFile[key] === secondFile[key]) {
       acc.push(`   ${key}: ${firstFile[key]}`);
-      return acc;
     }
+    return acc;
   }, []);
   console.log(`{\n${result.join('\n')}\n}`);
 };
