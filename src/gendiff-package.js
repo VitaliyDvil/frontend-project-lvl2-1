@@ -20,20 +20,15 @@ const genDiff = (firstFilePath, secondFilePath) => {
 
   const unionSortedKeys = getUnionSortedKeys(firstFile, secondFile);
   const result = unionSortedKeys.reduce((acc, key) => {    
-    if (!has(firstFile, key)) {
-      acc.push(` + ${key}: ${secondFile[key]}`);
-      return acc;
-    }
-    if (!has(secondFile, key)) {
+    if (has(firstFile, key) && !has(secondFile, key)) {
       acc.push(` - ${key}: ${firstFile[key]}`);
-      return acc;
-    }
-    if (firstFile[key] === secondFile[key]) {
+    } else if (!has(firstFile, key) && has(secondFile, key)) {
+      acc.push(` + ${key}: ${secondFile[key]}`);
+    } else if (firstFile[key] !== secondFile[key]) {
+      acc.push(` - ${key}: ${firstFile[key]}`);
+      acc.push(` + ${key}: ${secondFile[key]}`);
+    } else if (firstFile[key] === secondFile[key]) {
       acc.push(`   ${key}: ${firstFile[key]}`);
-    }
-    if (firstFile[key] === secondFile[key]) {
-      acc.push(` - ${key}: ${firstFile[key]}`);
-      acc.push(` + ${key}: ${secondFile[key]}`);
     }
     return acc;
   }, []);
