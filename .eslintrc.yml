@@ -1,8 +1,14 @@
+plugins:
+  - jest
 env:
-  es2020: true
   node: true
-extends: 'eslint:recommended'
+  es2020: true
+extends:
+  - 'airbnb-base'
+  - 'plugin:jest/recommended'
 parserOptions:
   ecmaVersion: 11
   sourceType: module
-rules: {}
+rules:
+  no-console: 0
+  import/extensions: 0

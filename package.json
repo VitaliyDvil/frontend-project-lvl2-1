@@ -1,14 +1,15 @@
 {
   "name": "frontend-project-lvl2",
+  "version": "1.0.0",
+  "description": "Compares two configuration files and shows a difference.",
   "bin": {
     "gendiff": "src/bin/gendiff.js"
   },
-  "version": "1.0.0",
-  "description": "Compares two configuration files and shows a difference.",
-  "main": "src/bin/genfiff.js",
-  "type": "module",
+  "engines": {
+    "node": ">=14"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "npx -n --experimental-vm-modules jest"
   },
   "repository": {
     "type": "git",
@@ -19,11 +20,20 @@
   "bugs": {
     "url": "https://github.com/looleeluu/frontend-project-lvl2/issues"
   },
+  "type": "module",
+  "jest": {
+    "testEnvironment": "node",
+    "transform": {}
+  },
   "homepage": "https://github.com/looleeluu/frontend-project-lvl2#readme",
   "devDependencies": {
+    "@jest/globals": "^26.4.2",
     "eslint": "^7.2.0",
     "eslint-config-airbnb-base": "^14.2.0",
-    "eslint-plugin-import": "^2.22.0"
+    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-jest": "^23.20.0",
+    "jest": "^26.4.2",
+    "jest-cli": "^26.4.2"
   },
   "dependencies": {
     "commander": "^6.0.0",

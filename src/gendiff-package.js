@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import lodash from 'lodash';
+
 const { keys, has, union } = lodash;
 
 const getProcessedFile = (relativeFilePath) => {
@@ -14,12 +15,12 @@ const getUnionSortedKeys = (firstFile, secondFile) => {
   return allkeys.sort();
 };
 
-const genDiff = (firstFilePath, secondFilePath) => { 
+const genDiff = (firstFilePath, secondFilePath) => {
   const firstFile = getProcessedFile(firstFilePath);
   const secondFile = getProcessedFile(secondFilePath);
 
   const unionSortedKeys = getUnionSortedKeys(firstFile, secondFile);
-  const result = unionSortedKeys.reduce((acc, key) => {    
+  const result = unionSortedKeys.reduce((acc, key) => {
     if (has(firstFile, key) && !has(secondFile, key)) {
       acc.push(` - ${key}: ${firstFile[key]}`);
     } else if (!has(firstFile, key) && has(secondFile, key)) {
@@ -32,9 +33,7 @@ const genDiff = (firstFilePath, secondFilePath) => {
     }
     return acc;
   }, []);
-  console.log(`{\n${result.join('\n')}\n}`);
+  return `{\n${result.join('\n')}\n}`;
 };
 
-export {
-  genDiff,
-}
+export default genDiff;
