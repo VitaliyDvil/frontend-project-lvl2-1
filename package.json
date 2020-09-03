@@ -9,7 +9,7 @@
     "node": ">=14"
   },
   "scripts": {
-    "test": "npx -n --experimental-vm-modules jest --watch"
+    "test": "npx -n --experimental-vm-modules jest"
   },
   "repository": {
     "type": "git",
