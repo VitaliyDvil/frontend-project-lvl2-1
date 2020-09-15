@@ -8,3 +8,6 @@
 
 ## Gendiff with *.yaml files
 [![asciicast](https://asciinema.org/a/358256.svg)](https://asciinema.org/a/358256)
+
+## Gendiff with *.ini files
+[![asciicast](https://asciinema.org/a/359938.svg)](https://asciinema.org/a/359938)

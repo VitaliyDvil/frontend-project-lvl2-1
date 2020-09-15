@@ -1,25 +1,17 @@
-import path from 'path';
 import lodash from 'lodash';
-import { getFile, getProcessedJSONFile, getProcessedYAMLFile } from './parsers.js';
+import { getUnionSortedKeys } from './utils.js';
+import { getFile, getParser } from './parsers.js';
 
-const { keys, has, union } = lodash;
-
-const getUnionSortedKeys = (firstFile, secondFile) => {
-  const allkeys = union(keys(firstFile), keys(secondFile));
-  return allkeys.sort();
-};
+const { has } = lodash;
 
 const genDiff = (firstFilePath, secondFilePath) => {
   const rawFirstFile = getFile(firstFilePath);
   const rawSecondFile = getFile(secondFilePath);
 
-  const firstFile = (path.extname(firstFilePath) === '.json')
-    ? getProcessedJSONFile(rawFirstFile)
-    : getProcessedYAMLFile(rawFirstFile);
+  const parser = getParser(firstFilePath);
 
-  const secondFile = (path.extname(secondFilePath) === '.json')
-    ? getProcessedJSONFile(rawSecondFile)
-    : getProcessedYAMLFile(rawSecondFile);
+  const firstFile = parser(rawFirstFile);
+  const secondFile = parser(rawSecondFile);
 
   const unionSortedKeys = getUnionSortedKeys(firstFile, secondFile);
   const result = unionSortedKeys.reduce((acc, key) => {
