@@ -7,12 +7,16 @@ const result = '{\n - follow: false\n   host: hexlet.io\n - proxy: 123.234.53.22
 test('gendiff testing', () => {
   const filepath1 = getFixturePath('file1.json');
   const filepath2 = getFixturePath('file2.json');
-  const filepath3 = getFixturePath('file3.yaml');
-  const filepath4 = getFixturePath('file4.yaml');
-  const filepath5 = getFixturePath('file5.ini');
-  const filepath6 = getFixturePath('file6.ini');
+  const filepath3 = getFixturePath('file1.yaml');
+  const filepath4 = getFixturePath('file2.yaml');
+  const filepath5 = getFixturePath('file1.ini');
+  const filepath6 = getFixturePath('file2.ini');
 
   expect(genDiff(filepath1, filepath2)).toBe(result);
   expect(genDiff(filepath3, filepath4)).toBe(result);
   expect(genDiff(filepath5, filepath6)).toBe(result);
 });
+
+test('gendiff testing', () => {
+  const 
+})
