@@ -1,6 +1,5 @@
 import { buildDiffInfo } from './utils.js';
 import { getFile, getParser } from './parsers.js';
-import formatter from './formatters/stylish.js';
 
 const genDiff = (firstFilePath, secondFilePath) => {
   const rawFirstFile = getFile(firstFilePath);
@@ -13,7 +12,7 @@ const genDiff = (firstFilePath, secondFilePath) => {
 
   const diffInfo = buildDiffInfo(firstFile, secondFile);
 
-  return formatter(diffInfo);
+  return diffInfo;
 };
 
 export default genDiff;

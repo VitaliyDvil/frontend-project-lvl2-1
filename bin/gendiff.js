@@ -1,15 +1,19 @@
 #!/usr/bin/env node
 import program from 'commander';
 import genDiff from '../src/gendiff-package.js';
+import stylish from '../src/formatters/stylish.js';
 
 program
   .version('1.0.0')
   .description('Compares two configuration files and shows a difference.')
   .arguments('<filepath1> <filepath2>')
+  .option('-f, --format [type]', 'output format', 'stylish')
   .action((filepath1, filepath2) => {
-    const result = genDiff(filepath1, filepath2);
+    const diffInfo = genDiff(filepath1, filepath2);
+    let formatter;
+    if (program.format === 'stylish') formatter = stylish;
+    const result = formatter(diffInfo);
     console.log(result);
-  })
-  .option('-f, --format [type]', 'output format');
+  });
 
 program.parse(program.args);
