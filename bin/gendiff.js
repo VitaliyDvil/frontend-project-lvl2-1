@@ -2,6 +2,7 @@
 import program from 'commander';
 import genDiff from '../src/gendiff-package.js';
 import stylish from '../src/formatters/stylish.js';
+import plain from '../src/formatters/plain.js';
 
 program
   .version('1.0.0')
@@ -12,6 +13,7 @@ program
     const diffInfo = genDiff(filepath1, filepath2);
     let formatter;
     if (program.format === 'stylish') formatter = stylish;
+    if (program.format === 'plain') formatter = plain;
     const result = formatter(diffInfo);
     console.log(result);
   });

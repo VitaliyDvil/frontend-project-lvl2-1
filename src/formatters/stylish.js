@@ -27,7 +27,7 @@ const checkValueType = (val, deep) => {
   return result;
 };
 
-const formatter = (diffInfo) => {
+const stylish = (diffInfo) => {
   const iter = (tree, deep) => {
     const parts = tree.flatMap((key) => {
       const {
@@ -59,7 +59,7 @@ const formatter = (diffInfo) => {
         return `${indent.slice(2)}${row}`;
       }
 
-      if (type === 'deleted') {
+      if (type === 'removed') {
         const printerValue = checkValueType(value, deep);
         const row = `- ${name}: ${printerValue}`;
         return `${indent.slice(2)}${row}`;
@@ -83,4 +83,4 @@ const formatter = (diffInfo) => {
   return iter(diffInfo, 1);
 };
 
-export default formatter;
+export default stylish;

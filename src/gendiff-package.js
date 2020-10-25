@@ -1,4 +1,4 @@
-import { buildDiffInfo } from './utils.js';
+import buildDiffInfo from './diffInfo.js';
 import { getFile, getParser } from './parsers.js';
 
 const genDiff = (firstFilePath, secondFilePath) => {
