@@ -1,13 +1,13 @@
 /* eslint-disable import/prefer-default-export */
-/* eslint-disable no-underscore-dangle */
-import path, { dirname } from 'path';
-import { fileURLToPath } from 'url';
+import fs from 'fs';
+import path from 'path';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-const getFixturePath = (filename) => path.join(__dirname, '..', '__fixtures__', filename);
+const getFile = (relativeFilePath) => {
+  const filePath = path.resolve(process.cwd(), relativeFilePath);
+  const file = fs.readFileSync(filePath, 'utf-8');
+  return file;
+};
 
 export {
-  getFixturePath,
+  getFile,
 };

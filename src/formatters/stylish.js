@@ -1,7 +1,5 @@
 import _ from 'lodash';
 
-const { isObject } = _;
-
 const INDENT = '    ';
 
 const makeIndent = (deep) => INDENT.repeat(deep);
@@ -10,7 +8,7 @@ const makeObjAsString = (obj, deep) => {
   const keys = Object.keys(obj);
   const rows = keys.map((key) => {
     const indent = makeIndent(deep);
-    const row = ((isObject(obj[key])))
+    const row = ((_.isObject(obj[key])))
       ? `${key}: ${makeObjAsString(obj[key], deep + 1)}`
       : `${key}: ${obj[key]}`;
     return `${indent}${row}`;
@@ -21,20 +19,20 @@ const makeObjAsString = (obj, deep) => {
 };
 
 const checkValueType = (val, deep) => {
-  const result = (isObject(val))
+  const result = (_.isObject(val))
     ? makeObjAsString(val, deep + 1)
     : val;
   return result;
 };
 
-const stylish = (diffInfo) => {
+const stylishFormatter = (diffInfo) => {
   const iter = (tree, deep) => {
     const parts = tree.flatMap((key) => {
       const {
         name,
         value,
-        firstValue,
-        secondValue,
+        valueBefore,
+        valueAfter,
         type,
         children,
       } = key;
@@ -64,13 +62,13 @@ const stylish = (diffInfo) => {
         const row = `- ${name}: ${printerValue}`;
         return `${indent.slice(2)}${row}`;
       }
-      const printerFirstValue = checkValueType(firstValue, deep);
-      const printerSecondValue = checkValueType(secondValue, deep);
+      const printerValueBefore = checkValueType(valueBefore, deep);
+      const printerValueAfter = checkValueType(valueAfter, deep);
 
       const result = [];
 
-      const firstRow = `- ${name}: ${printerFirstValue}`;
-      const secondRow = `+ ${name}: ${printerSecondValue}`;
+      const firstRow = `- ${name}: ${printerValueBefore}`;
+      const secondRow = `+ ${name}: ${printerValueAfter}`;
 
       result.push(`${indent.slice(2)}${firstRow}`);
       result.push(`${indent.slice(2)}${secondRow}`);
@@ -83,4 +81,4 @@ const stylish = (diffInfo) => {
   return iter(diffInfo, 1);
 };
 
-export default stylish;
+export default stylishFormatter;

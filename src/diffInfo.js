@@ -1,31 +1,17 @@
-import lodash from 'lodash';
+import _ from 'lodash';
 
-const {
-  union,
-  keys,
-  has,
-  isObject,
-} = lodash;
-
-const getUnionSortedKeys = (firstFile, secondFile) => {
-  const allkeys = union(keys(firstFile), keys(secondFile));
-  return allkeys.sort();
+const getUnionSortedKeys = (before, after) => {
+  const allkeys = _.union(_.keys(before), _.keys(after));
+  return [...allkeys].sort();
 };
 
-const getDiffInfo = (name, value, type) => {
-  const diffInfo = {
-    name,
-    value,
-    type,
-  };
-  return diffInfo;
-};
+const getDiffInfo = (name, value, type) => ({ name, value, type });
 
-const buildDiffInfo = (first, second) => {
-  const unionKeys = getUnionSortedKeys(first, second);
+const buildDiffInfo = (before, after) => {
+  const unionKeys = getUnionSortedKeys(before, after);
   return unionKeys.map((key) => {
-    if (isObject(first[key]) && isObject(second[key])) {
-      const children = buildDiffInfo(first[key], second[key]);
+    if (_.isObject(before[key]) && _.isObject(after[key])) {
+      const children = buildDiffInfo(before[key], after[key]);
       return {
         name: key,
         children,
@@ -33,19 +19,19 @@ const buildDiffInfo = (first, second) => {
       };
     }
 
-    if (has(first, key) && !has(second, key)) {
-      return getDiffInfo(key, first[key], 'removed');
+    if (!_.has(after, key)) {
+      return getDiffInfo(key, before[key], 'removed');
     }
-    if (!has(first, key) && has(second, key)) {
-      return getDiffInfo(key, second[key], 'added');
+    if (!_.has(before, key)) {
+      return getDiffInfo(key, after[key], 'added');
     }
-    if (first[key] === second[key]) {
-      return getDiffInfo(key, first[key], 'unchanged');
+    if (before[key] === after[key]) {
+      return getDiffInfo(key, before[key], 'unchanged');
     }
     return {
       name: key,
-      firstValue: first[key],
-      secondValue: second[key],
+      valueBefore: before[key],
+      valueAfter: after[key],
       type: 'updated',
     };
   });

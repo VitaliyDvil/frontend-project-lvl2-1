@@ -41,4 +41,4 @@ Options:
 [![asciicast](https://asciinema.org/a/367814.svg)](https://asciinema.org/a/367814)
 
 ## gendiff with json formatter:
-[![asciicast](https://asciinema.org/a/367815.svg)](https://asciinema.org/a/367815)
+[![asciicast](https://asciinema.org/a/370394.svg)](https://asciinema.org/a/370394)

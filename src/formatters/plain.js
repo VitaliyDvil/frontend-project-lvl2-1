@@ -1,22 +1,20 @@
-import lodash from 'lodash';
+import _ from 'lodash';
 
-const { isObject } = lodash;
-
-const valueFormatting = (value) => {
-  const result = (isObject(value))
+const getPrintedValue = (value) => {
+  const result = (_.isObject(value))
     ? '[complex value]'
     : `'${value}'`;
   return result;
 };
 
-const plain = (diffInfo) => {
+const plainFormatter = (diffInfo) => {
   const iter = (tree, source = []) => {
     const rows = tree.flatMap((key) => {
       const {
         name,
         value,
-        firstValue,
-        secondValue,
+        valueBefore,
+        valueAfter,
         type,
         children,
       } = key;
@@ -24,6 +22,7 @@ const plain = (diffInfo) => {
       if (type === 'unchanged') {
         return [];
       }
+
       source.push(name);
       const sourceProperty = `'${source.join('.')}'`;
       source.pop();
@@ -31,7 +30,7 @@ const plain = (diffInfo) => {
       const startOfSentence = `property ${sourceProperty} was ${type}`;
 
       if (type === 'added') {
-        const printedValue = valueFormatting(value);
+        const printedValue = getPrintedValue(value);
         return `${startOfSentence} with value: ${printedValue}`;
       }
 
@@ -40,10 +39,10 @@ const plain = (diffInfo) => {
       }
 
       if (type === 'updated') {
-        const printedFirstValue = valueFormatting(firstValue);
-        const printedSecondValue = valueFormatting(secondValue);
+        const printedValueBefore = getPrintedValue(valueBefore);
+        const printedValueAfter = getPrintedValue(valueAfter);
 
-        return `${startOfSentence}. From ${printedFirstValue} to ${printedSecondValue}`;
+        return `${startOfSentence}. From ${printedValueBefore} to ${printedValueAfter}`;
       }
 
       source.push(name);
@@ -56,4 +55,4 @@ const plain = (diffInfo) => {
   return iter(diffInfo);
 };
 
-export default plain;
+export default plainFormatter;
