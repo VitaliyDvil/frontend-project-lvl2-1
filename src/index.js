@@ -1,8 +1,8 @@
 import path from 'path';
-import buildDiffInfo from './diffInfo.js';
+import buildDiffInfo from './diff-info.js';
 import { getFile } from './utils.js';
-import getParser from './parsers/parserSelector.js';
-import getFormatter from './formatters/formatterSelector.js';
+import getParser from './parsers/parser-selector.js';
+import getFormatter from './formatters/formatter-selector.js';
 
 const genDiff = (beforeFilePath, afterFilePath, outputFormat) => {
   const rawFirstFile = getFile(beforeFilePath);

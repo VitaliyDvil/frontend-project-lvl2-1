@@ -8,14 +8,6 @@ const mapFormatToFormatter = {
   stylish: stylishFormatter,
 };
 
-const getFormatter = (formatterName) => {
-  if (formatterName === 'json') {
-    return mapFormatToFormatter.json;
-  }
-  if (formatterName === 'plain') {
-    return mapFormatToFormatter.plain;
-  }
-  return mapFormatToFormatter.stylish;
-};
+const getFormatter = (formatterName) => mapFormatToFormatter[formatterName];
 
 export default getFormatter;

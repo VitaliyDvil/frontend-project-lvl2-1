@@ -1,11 +1,8 @@
 import _ from 'lodash';
 
-const getPrintedValue = (value) => {
-  const result = (_.isObject(value))
-    ? '[complex value]'
-    : `'${value}'`;
-  return result;
-};
+const getPrintedValue = (value) => ((_.isObject(value))
+  ? '[complex value]'
+  : `'${value}'`);
 
 const plainFormatter = (diffInfo) => {
   const iter = (tree, source = []) => {

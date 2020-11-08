@@ -25,7 +25,7 @@ const buildDiffInfo = (before, after) => {
     if (!_.has(before, key)) {
       return getDiffInfo(key, after[key], 'added');
     }
-    if (before[key] === after[key]) {
+    if (_.isEqual(before[key], after[key])) {
       return getDiffInfo(key, before[key], 'unchanged');
     }
     return {

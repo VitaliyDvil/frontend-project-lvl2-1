@@ -1,6 +1,12 @@
-/* eslint-disable no-restricted-globals */
 import ini from 'ini';
 import _ from 'lodash';
+
+const isNumber = (value) => {
+  if (parseInt(value, 10)) {
+    return true;
+  }
+  return false;
+};
 
 const iter = (item) => {
   if (_.isObject(item)) {
@@ -11,7 +17,7 @@ const iter = (item) => {
       return acc;
     }, {});
   }
-  if (!isNaN(item) && !_.isBoolean(item)) {
+  if (isNumber(item)) {
     const newValue = Number(item);
     return newValue;
   }

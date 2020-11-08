@@ -1,6 +1,6 @@
-import jsonParser from './jsonParser.js';
-import yamlParser from './yamlParser.js';
-import iniParser from './iniParser.js';
+import jsonParser from './json-parser.js';
+import yamlParser from './yaml-parser.js';
+import iniParser from './ini-parser.js';
 
 const mapFormatToParser = {
   json: jsonParser,
