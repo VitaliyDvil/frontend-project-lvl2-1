@@ -8,11 +8,11 @@ const isNumber = (value) => {
   return false;
 };
 
-const iter = (item) => {
+const replaceStringsWithNumbers = (item) => {
   if (_.isObject(item)) {
     const keys = _.keys(item);
     return keys.reduce((acc, key) => {
-      const newValue = iter(item[key]);
+      const newValue = replaceStringsWithNumbers(item[key]);
       acc[key] = newValue;
       return acc;
     }, {});
@@ -24,9 +24,9 @@ const iter = (item) => {
   return item;
 };
 
-const iniParser = (file) => {
+const getParsedIniFile = (file) => {
   const parsedFile = ini.parse(file);
-  return iter(parsedFile);
+  return replaceStringsWithNumbers(parsedFile);
 };
 
-export default iniParser;
+export default getParsedIniFile;

@@ -10,17 +10,17 @@ const genDiff = (beforeFilePath, afterFilePath, outputFormat) => {
   const beforFileFormatName = getFileFormatName(beforeFilePath);
   const afterFileFormatName = getFileFormatName(afterFilePath);
 
-  const beforeFileParser = getParser(beforFileFormatName);
-  const afterFileParser = getParser(afterFileFormatName);
+  const getParsedBeforeFile = getParser(beforFileFormatName);
+  const getParsedAfterFile = getParser(afterFileFormatName);
 
-  const parsedBeforeFile = beforeFileParser(beforeFileContent);
-  const parsedAfterFile = afterFileParser(afterFileContent);
+  const parsedBeforeFile = getParsedBeforeFile(beforeFileContent);
+  const parsedAfterFile = getParsedAfterFile(afterFileContent);
 
   const diffInfo = buildDiffInfo(parsedBeforeFile, parsedAfterFile);
 
-  const formatter = getFormatter(outputFormat);
+  const getFormatterOutput = getFormatter(outputFormat);
 
-  return formatter(diffInfo);
+  return getFormatterOutput(diffInfo);
 };
 
 export default genDiff;

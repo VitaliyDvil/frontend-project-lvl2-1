@@ -1,16 +1,16 @@
-import jsonParser from './json-parser.js';
-import yamlParser from './yaml-parser.js';
-import iniParser from './ini-parser.js';
+import getParsedJsonFile from './json-parser.js';
+import getParsedYamlFile from './yaml-parser.js';
+import getParsedIniFile from './ini-parser.js';
 
 const mapFormatToParser = {
-  json: jsonParser,
-  yaml: yamlParser,
-  ini: iniParser,
+  json: getParsedJsonFile,
+  yaml: getParsedYamlFile,
+  ini: getParsedIniFile,
 };
 
 const getParser = (fileFormatName) => {
   if (mapFormatToParser[fileFormatName] === undefined) {
-    throw new Error('Unsupported file format');
+    throw new Error(`${fileFormatName} is unsupported file format`);
   }
 
   return mapFormatToParser[fileFormatName];

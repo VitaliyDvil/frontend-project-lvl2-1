@@ -22,9 +22,9 @@ const getPrintedValue = (value) => {
   return `${value}`;
 };
 
-const unchangedType = () => [];
+const getFormattedUnchangedProperty = () => [];
 
-const addedType = (key, path) => {
+const getFormattedAddedProperty = (key, path) => {
   const { name, value, type } = key;
 
   const startOfSentence = getStartOfSentence(name, path, type);
@@ -33,14 +33,14 @@ const addedType = (key, path) => {
   return `${startOfSentence} with value: ${printedValue}`;
 };
 
-const removedType = (key, path) => {
+const getFormattedRemovedPRoperty = (key, path) => {
   const { name, type } = key;
 
   const startOfSentence = getStartOfSentence(name, path, type);
   return startOfSentence;
 };
 
-const updatedType = (key, path) => {
+const getFormattedUpdatedProperty = (key, path) => {
   const {
     name,
     valueBefore,
@@ -56,7 +56,7 @@ const updatedType = (key, path) => {
   return `${startOfSentence}. From ${printedValueBefore} to ${printedValueAfter}`;
 };
 
-const nestedType = (key, path, iter) => {
+const getFormattedNestedProperty = (key, path, iter) => {
   const { name, children } = key;
 
   path.push(name);
@@ -67,11 +67,11 @@ const nestedType = (key, path, iter) => {
 };
 
 const mapTypeToPropertyFormatter = {
-  unchanged: unchangedType,
-  added: addedType,
-  removed: removedType,
-  updated: updatedType,
-  nested: nestedType,
+  unchanged: getFormattedUnchangedProperty,
+  added: getFormattedAddedProperty,
+  removed: getFormattedRemovedPRoperty,
+  updated: getFormattedUpdatedProperty,
+  nested: getFormattedNestedProperty,
 };
 
 const plainFormatter = (diffInfo) => {

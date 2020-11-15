@@ -8,12 +8,6 @@ const mapFormatToFormatter = {
   stylish: stylishFormatter,
 };
 
-const getFormatter = (formatterName) => {
-  if (mapFormatToFormatter[formatterName] === undefined) {
-    throw new Error('Unsupported output');
-  }
-
-  return mapFormatToFormatter[formatterName];
-};
+const getFormatter = (formatterName) => mapFormatToFormatter[formatterName];
 
 export default getFormatter;

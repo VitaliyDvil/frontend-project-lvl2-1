@@ -25,7 +25,7 @@ const checkValueType = (val, deep) => {
   return result;
 };
 
-const nestedPropertyFormatter = (key, indent, deep, func) => {
+const getFormattedNestedProperty = (key, indent, deep, func) => {
   const {
     name,
     children,
@@ -36,7 +36,7 @@ const nestedPropertyFormatter = (key, indent, deep, func) => {
   return `${indent}${row}`;
 };
 
-const unchangedPropertyFormatter = (key, indent, deep) => {
+const getFormattedUnchangedProperty = (key, indent, deep) => {
   const {
     name,
     value,
@@ -47,7 +47,7 @@ const unchangedPropertyFormatter = (key, indent, deep) => {
   return `${indent}${row}`;
 };
 
-const addedPropertyFormatter = (key, indent, deep) => {
+const getFormattedAddedProperty = (key, indent, deep) => {
   const {
     name,
     value,
@@ -58,7 +58,7 @@ const addedPropertyFormatter = (key, indent, deep) => {
   return `${indent.slice(2)}${row}`;
 };
 
-const removedPropertyFormatter = (key, indent, deep) => {
+const getFormattedRemovedProperty = (key, indent, deep) => {
   const {
     name,
     value,
@@ -69,7 +69,7 @@ const removedPropertyFormatter = (key, indent, deep) => {
   return `${indent.slice(2)}${row}`;
 };
 
-const updatedPropertyFormatter = (key, indent, deep) => {
+const getFormattedUpdatedProperty = (key, indent, deep) => {
   const {
     name,
     valueBefore,
@@ -90,11 +90,11 @@ const updatedPropertyFormatter = (key, indent, deep) => {
 };
 
 const mapTypeToPropertyFormatter = {
-  nested: nestedPropertyFormatter,
-  unchanged: unchangedPropertyFormatter,
-  added: addedPropertyFormatter,
-  removed: removedPropertyFormatter,
-  updated: updatedPropertyFormatter,
+  nested: getFormattedNestedProperty,
+  unchanged: getFormattedUnchangedProperty,
+  added: getFormattedAddedProperty,
+  removed: getFormattedRemovedProperty,
+  updated: getFormattedUpdatedProperty,
 };
 
 const stylishFormatter = (diffInfo) => {
