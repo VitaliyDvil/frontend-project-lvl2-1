@@ -8,14 +8,12 @@ const mapFormatToParser = {
   ini: iniParser,
 };
 
-const getParser = (fileExtName) => {
-  if (fileExtName === '.json') {
-    return mapFormatToParser.json;
+const getParser = (fileFormatName) => {
+  if (mapFormatToParser[fileFormatName] === undefined) {
+    throw new Error('Unsupported file format');
   }
-  if (fileExtName === '.yaml') {
-    return mapFormatToParser.yaml;
-  }
-  return mapFormatToParser.ini;
+
+  return mapFormatToParser[fileFormatName];
 };
 
 export default getParser;

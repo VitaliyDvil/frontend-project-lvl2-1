@@ -25,53 +25,88 @@ const checkValueType = (val, deep) => {
   return result;
 };
 
+const nestedPropertyFormatter = (key, indent, deep, func) => {
+  const {
+    name,
+    children,
+  } = key;
+
+  const nested = func(children, deep + 1);
+  const row = `${name}: ${nested}`;
+  return `${indent}${row}`;
+};
+
+const unchangedPropertyFormatter = (key, indent, deep) => {
+  const {
+    name,
+    value,
+  } = key;
+
+  const printerValue = checkValueType(value, deep);
+  const row = `${name}: ${printerValue}`;
+  return `${indent}${row}`;
+};
+
+const addedPropertyFormatter = (key, indent, deep) => {
+  const {
+    name,
+    value,
+  } = key;
+
+  const printerValue = checkValueType(value, deep);
+  const row = `+ ${name}: ${printerValue}`;
+  return `${indent.slice(2)}${row}`;
+};
+
+const removedPropertyFormatter = (key, indent, deep) => {
+  const {
+    name,
+    value,
+  } = key;
+
+  const printerValue = checkValueType(value, deep);
+  const row = `- ${name}: ${printerValue}`;
+  return `${indent.slice(2)}${row}`;
+};
+
+const updatedPropertyFormatter = (key, indent, deep) => {
+  const {
+    name,
+    valueBefore,
+    valueAfter,
+  } = key;
+
+  const printerValueBefore = checkValueType(valueBefore, deep);
+  const printerValueAfter = checkValueType(valueAfter, deep);
+
+  const result = [];
+
+  const firstRow = `- ${name}: ${printerValueBefore}`;
+  const secondRow = `+ ${name}: ${printerValueAfter}`;
+
+  result.push(`${indent.slice(2)}${firstRow}`);
+  result.push(`${indent.slice(2)}${secondRow}`);
+  return result;
+};
+
+const mapTypeToPropertyFormatter = {
+  nested: nestedPropertyFormatter,
+  unchanged: unchangedPropertyFormatter,
+  added: addedPropertyFormatter,
+  removed: removedPropertyFormatter,
+  updated: updatedPropertyFormatter,
+};
+
 const stylishFormatter = (diffInfo) => {
   const iter = (tree, deep) => {
     const parts = tree.flatMap((key) => {
-      const {
-        name,
-        value,
-        valueBefore,
-        valueAfter,
-        type,
-        children,
-      } = key;
-
+      const { type } = key;
       const indent = makeIndent(deep);
 
-      if (type === 'nested') {
-        const nested = iter(children, deep + 1);
-        const row = `${name}: ${nested}`;
-        return `${indent}${row}`;
-      }
-
-      if (type === 'unchanged') {
-        const printerValue = checkValueType(value, deep);
-        const row = `${name}: ${printerValue}`;
-        return `${indent}${row}`;
-      }
-
-      if (type === 'added') {
-        const printerValue = checkValueType(value, deep);
-        const row = `+ ${name}: ${printerValue}`;
-        return `${indent.slice(2)}${row}`;
-      }
-
-      if (type === 'removed') {
-        const printerValue = checkValueType(value, deep);
-        const row = `- ${name}: ${printerValue}`;
-        return `${indent.slice(2)}${row}`;
-      }
-      const printerValueBefore = checkValueType(valueBefore, deep);
-      const printerValueAfter = checkValueType(valueAfter, deep);
-
-      const result = [];
-
-      const firstRow = `- ${name}: ${printerValueBefore}`;
-      const secondRow = `+ ${name}: ${printerValueAfter}`;
-
-      result.push(`${indent.slice(2)}${firstRow}`);
-      result.push(`${indent.slice(2)}${secondRow}`);
+      const getFormattedProperty = mapTypeToPropertyFormatter[type];
+      const result = (type === 'nested')
+        ? getFormattedProperty(key, indent, deep, iter)
+        : getFormattedProperty(key, indent, deep);
       return result;
     });
     const braceIndent = makeIndent(deep - 1);

@@ -1,13 +1,19 @@
-/* eslint-disable import/prefer-default-export */
 import fs from 'fs';
 import path from 'path';
 
-const getFile = (relativeFilePath) => {
+const readFile = (relativeFilePath) => {
   const filePath = path.resolve(process.cwd(), relativeFilePath);
-  const file = fs.readFileSync(filePath, 'utf-8');
-  return file;
+  const fileContent = fs.readFileSync(filePath, 'utf-8');
+  return fileContent;
+};
+
+const getFileFormatName = (filePath) => {
+  const fileExtName = path.extname(filePath);
+  const fileFormatName = fileExtName.slice(1);
+  return fileFormatName;
 };
 
 export {
-  getFile,
+  readFile,
+  getFileFormatName,
 };
