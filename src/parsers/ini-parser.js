@@ -1,18 +1,20 @@
 import ini from 'ini';
 import _ from 'lodash';
 
+const NUMBER_SYSTEM = 10;
+
 const isNumber = (value) => {
-  if (parseInt(value, 10)) {
+  if (parseInt(value, NUMBER_SYSTEM)) {
     return true;
   }
   return false;
 };
 
-const replaceStringsWithNumbers = (item) => {
+const formatValuesByType = (item) => {
   if (_.isObject(item)) {
     const keys = _.keys(item);
     return keys.reduce((acc, key) => {
-      const newValue = replaceStringsWithNumbers(item[key]);
+      const newValue = formatValuesByType(item[key]);
       acc[key] = newValue;
       return acc;
     }, {});
@@ -26,7 +28,7 @@ const replaceStringsWithNumbers = (item) => {
 
 const getParsedIniFile = (file) => {
   const parsedFile = ini.parse(file);
-  return replaceStringsWithNumbers(parsedFile);
+  return formatValuesByType(parsedFile);
 };
 
 export default getParsedIniFile;

@@ -1,3 +1,3 @@
-const jsonFormatter = (diffInfo) => JSON.stringify(diffInfo);
+const genJsonFormattedDiff = (diffInfo) => JSON.stringify(diffInfo);
 
-export default jsonFormatter;
+export default genJsonFormattedDiff;

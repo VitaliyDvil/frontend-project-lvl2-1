@@ -1,9 +1,10 @@
 import _ from 'lodash';
 
 const getPathToProperty = (name, path) => {
-  path.push(name);
-  const pathToProperty = `'${path.join('.')}'`;
-  path.pop();
+  const currentPath = _.cloneDeep(path);
+  currentPath.push(name);
+  const pathToProperty = `'${currentPath.join('.')}'`;
+
   return pathToProperty;
 };
 
@@ -19,7 +20,7 @@ const getPrintedValue = (value) => {
   if (_.isString(value)) {
     return `'${value}'`;
   }
-  return `${value}`;
+  return value;
 };
 
 const getFormattedUnchangedProperty = () => [];
@@ -74,7 +75,7 @@ const mapTypeToPropertyFormatter = {
   nested: getFormattedNestedProperty,
 };
 
-const plainFormatter = (diffInfo) => {
+const genPlainFormattedDiff = (diffInfo) => {
   const iter = (tree, path = []) => {
     const valueProperties = tree.flatMap((key) => {
       const { type } = key;
@@ -82,12 +83,11 @@ const plainFormatter = (diffInfo) => {
       const getFormattedProperty = mapTypeToPropertyFormatter[type];
 
       if (type === 'unchanged') return getFormattedProperty();
-      if (type === 'nested') return getFormattedProperty(key, path, iter);
-      return getFormattedProperty(key, path);
+      return getFormattedProperty(key, path, iter);
     });
     return valueProperties.join('\n');
   };
   return iter(diffInfo);
 };
 
-export default plainFormatter;
+export default genPlainFormattedDiff;

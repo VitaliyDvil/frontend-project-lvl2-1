@@ -25,56 +25,62 @@ const checkValueType = (val, deep) => {
   return result;
 };
 
-const getFormattedNestedProperty = (key, indent, deep, func) => {
+const getFormattedNestedProperty = (key, deep, cb) => {
   const {
     name,
     children,
   } = key;
 
-  const nested = func(children, deep + 1);
+  const indent = makeIndent(deep);
+  const nested = cb(children, deep + 1);
   const row = `${name}: ${nested}`;
   return `${indent}${row}`;
 };
 
-const getFormattedUnchangedProperty = (key, indent, deep) => {
+const getFormattedUnchangedProperty = (key, deep) => {
   const {
     name,
     value,
   } = key;
 
+  const indent = makeIndent(deep);
   const printerValue = checkValueType(value, deep);
   const row = `${name}: ${printerValue}`;
   return `${indent}${row}`;
 };
 
-const getFormattedAddedProperty = (key, indent, deep) => {
+const getFormattedAddedProperty = (key, deep) => {
   const {
     name,
     value,
   } = key;
 
+  const indent = makeIndent(deep);
   const printerValue = checkValueType(value, deep);
   const row = `+ ${name}: ${printerValue}`;
   return `${indent.slice(2)}${row}`;
 };
 
-const getFormattedRemovedProperty = (key, indent, deep) => {
+const getFormattedRemovedProperty = (key, deep) => {
   const {
     name,
     value,
   } = key;
 
+  const indent = makeIndent(deep);
   const printerValue = checkValueType(value, deep);
   const row = `- ${name}: ${printerValue}`;
   return `${indent.slice(2)}${row}`;
 };
 
-const getFormattedUpdatedProperty = (key, indent, deep) => {
+const getFormattedUpdatedProperty = (key, deep) => {
   const {
     name,
     valueBefore,
     valueAfter,
   } = key;
+
+  const indent = makeIndent(deep);
 
   const printerValueBefore = checkValueType(valueBefore, deep);
   const printerValueAfter = checkValueType(valueAfter, deep);
@@ -97,17 +103,13 @@ const mapTypeToPropertyFormatter = {
   updated: getFormattedUpdatedProperty,
 };
 
-const stylishFormatter = (diffInfo) => {
+const genStylishFormattedDiff = (diffInfo) => {
   const iter = (tree, deep) => {
     const parts = tree.flatMap((key) => {
       const { type } = key;
-      const indent = makeIndent(deep);
 
       const getFormattedProperty = mapTypeToPropertyFormatter[type];
-      const result = (type === 'nested')
-        ? getFormattedProperty(key, indent, deep, iter)
-        : getFormattedProperty(key, indent, deep);
-      return result;
+      return getFormattedProperty(key, deep, iter);
     });
     const braceIndent = makeIndent(deep - 1);
     return `{\n${parts.join('\n')}\n${braceIndent}}`;
@@ -116,4 +118,4 @@ const stylishFormatter = (diffInfo) => {
   return iter(diffInfo, 1);
 };
 
-export default stylishFormatter;
+export default genStylishFormattedDiff;

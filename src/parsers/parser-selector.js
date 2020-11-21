@@ -9,11 +9,13 @@ const mapFormatToParser = {
 };
 
 const getParser = (fileFormatName) => {
-  if (mapFormatToParser[fileFormatName] === undefined) {
+  const getParsedFile = mapFormatToParser[fileFormatName];
+
+  if (getParsedFile === undefined) {
     throw new Error(`${fileFormatName} is unsupported file format`);
   }
 
-  return mapFormatToParser[fileFormatName];
+  return getParsedFile;
 };
 
 export default getParser;
