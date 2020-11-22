@@ -2,10 +2,10 @@ import _ from 'lodash';
 
 const getUnionSortedKeys = (before, after) => {
   const allkeys = _.union(_.keys(before), _.keys(after));
-  return [...allkeys].sort();
+  return _.cloneDeep(allkeys).sort();
 };
 
-const getDiffInfo = (name, value, type) => ({ name, value, type });
+const getNodeInfo = (name, value, type) => ({ name, value, type });
 
 const buildDiffInfo = (before, after) => {
   const unionKeys = getUnionSortedKeys(before, after);
@@ -20,13 +20,13 @@ const buildDiffInfo = (before, after) => {
     }
 
     if (!_.has(after, key)) {
-      return getDiffInfo(key, before[key], 'removed');
+      return getNodeInfo(key, before[key], 'removed');
     }
     if (!_.has(before, key)) {
-      return getDiffInfo(key, after[key], 'added');
+      return getNodeInfo(key, after[key], 'added');
     }
     if (_.isEqual(before[key], after[key])) {
-      return getDiffInfo(key, before[key], 'unchanged');
+      return getNodeInfo(key, before[key], 'unchanged');
     }
     return {
       name: key,

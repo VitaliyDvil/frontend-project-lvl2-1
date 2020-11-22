@@ -14,9 +14,9 @@ const testingFilesFileFormats = ['json', 'yaml', 'ini'];
 
 const outputFormatterTypes = ['stylish', 'plain', 'json'];
 
-describe.each(testingFilesFileFormats)('gendiff with two %s files', (testingFileFormat) => {
+describe.each(testingFilesFileFormats)('gendiff call given two files %s format and', (testingFileFormat) => {
   outputFormatterTypes.forEach((outputFormatterType) => {
-    test(`gendiff(file1.${testingFileFormat}, file2.${testingFileFormat}) to ${outputFormatterType} output`, () => {
+    test(`output ${outputFormatterType} formatter should return expected result`, () => {
       const pathFileBefore = getFixturePath(`fileBefore.${testingFileFormat}`);
       const pathFileAfter = getFixturePath(`fileAfter.${testingFileFormat}`);
       const expectedResult = getResult(`${outputFormatterType}-result.txt`);

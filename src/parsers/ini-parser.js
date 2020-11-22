@@ -1,10 +1,10 @@
 import ini from 'ini';
 import _ from 'lodash';
 
-const NUMBER_SYSTEM = 10;
+const BASE_NUMBER_SYSTEM = 10;
 
 const isNumber = (value) => {
-  if (parseInt(value, NUMBER_SYSTEM)) {
+  if (parseInt(value, BASE_NUMBER_SYSTEM)) {
     return true;
   }
   return false;

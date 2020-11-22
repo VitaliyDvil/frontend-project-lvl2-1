@@ -25,8 +25,8 @@ const getPrintedValue = (value) => {
 
 const getFormattedUnchangedProperty = () => [];
 
-const getFormattedAddedProperty = (key, path) => {
-  const { name, value, type } = key;
+const getFormattedAddedProperty = (node, path) => {
+  const { name, value, type } = node;
 
   const startOfSentence = getStartOfSentence(name, path, type);
 
@@ -34,20 +34,20 @@ const getFormattedAddedProperty = (key, path) => {
   return `${startOfSentence} with value: ${printedValue}`;
 };
 
-const getFormattedRemovedPRoperty = (key, path) => {
-  const { name, type } = key;
+const getFormattedRemovedPRoperty = (node, path) => {
+  const { name, type } = node;
 
   const startOfSentence = getStartOfSentence(name, path, type);
   return startOfSentence;
 };
 
-const getFormattedUpdatedProperty = (key, path) => {
+const getFormattedUpdatedProperty = (node, path) => {
   const {
     name,
     valueBefore,
     valueAfter,
     type,
-  } = key;
+  } = node;
 
   const startOfSentence = getStartOfSentence(name, path, type);
 
@@ -57,8 +57,8 @@ const getFormattedUpdatedProperty = (key, path) => {
   return `${startOfSentence}. From ${printedValueBefore} to ${printedValueAfter}`;
 };
 
-const getFormattedNestedProperty = (key, path, iter) => {
-  const { name, children } = key;
+const getFormattedNestedProperty = (node, path, iter) => {
+  const { name, children } = node;
 
   path.push(name);
   const nested = iter(children, path);
@@ -76,14 +76,14 @@ const mapTypeToPropertyFormatter = {
 };
 
 const genPlainFormattedDiff = (diffInfo) => {
-  const iter = (tree, path = []) => {
-    const valueProperties = tree.flatMap((key) => {
-      const { type } = key;
+  const iter = (nodes, path = []) => {
+    const valueProperties = nodes.flatMap((node) => {
+      const { type } = node;
 
       const getFormattedProperty = mapTypeToPropertyFormatter[type];
 
       if (type === 'unchanged') return getFormattedProperty();
-      return getFormattedProperty(key, path, iter);
+      return getFormattedProperty(node, path, iter);
     });
     return valueProperties.join('\n');
   };

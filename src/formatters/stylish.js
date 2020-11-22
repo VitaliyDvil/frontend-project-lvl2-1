@@ -2,120 +2,127 @@ import _ from 'lodash';
 
 const INDENT = '    ';
 
+const indentForProperty = {
+  unchanged: INDENT,
+  added: '  + ',
+  removed: '  - ',
+};
+
 const makeIndent = (deep) => INDENT.repeat(deep);
 
-const makeObjAsString = (obj, deep) => {
+const stringifyValue = (obj, deep) => {
   const keys = Object.keys(obj);
   const rows = keys.map((key) => {
-    const indent = makeIndent(deep);
-    const row = ((_.isObject(obj[key])))
-      ? `${key}: ${makeObjAsString(obj[key], deep + 1)}`
-      : `${key}: ${obj[key]}`;
-    return `${indent}${row}`;
+    const indent = makeIndent(deep) + indentForProperty.unchanged;
+    if ((_.isObject(obj[key]))) {
+      const value = stringifyValue(obj[key], deep + 1);
+      return `${indent}${key}: ${value}`;
+    }
+    return `${indent}${key}: ${obj[key]}`;
   });
 
-  const braceIndent = makeIndent(deep - 1);
+  const braceIndent = makeIndent(deep);
   return `{\n${rows.join('\n')}\n${braceIndent}}`;
 };
 
 const checkValueType = (val, deep) => {
   const result = (_.isObject(val))
-    ? makeObjAsString(val, deep + 1)
+    ? stringifyValue(val, deep + 1)
     : val;
   return result;
 };
 
-const getFormattedNestedProperty = (key, deep, cb) => {
+const getFormattedNodeNested = (key, deep, iter) => {
   const {
     name,
     children,
   } = key;
 
-  const indent = makeIndent(deep);
-  const nested = cb(children, deep + 1);
+  const indent = makeIndent(deep) + indentForProperty.unchanged;
+  const nested = iter(children, deep + 1);
   const row = `${name}: ${nested}`;
   return `${indent}${row}`;
 };
 
-const getFormattedUnchangedProperty = (key, deep) => {
+const getFormattedNodeUnchanged = (key, deep) => {
   const {
     name,
     value,
   } = key;
 
-  const indent = makeIndent(deep);
-  const printerValue = checkValueType(value, deep);
-  const row = `${name}: ${printerValue}`;
+  const indent = makeIndent(deep) + indentForProperty.unchanged;
+  const printedValue = checkValueType(value, deep);
+  const row = `${name}: ${printedValue}`;
   return `${indent}${row}`;
 };
 
-const getFormattedAddedProperty = (key, deep) => {
+const getFormattedNodeAdded = (key, deep) => {
   const {
     name,
     value,
   } = key;
 
-  const indent = makeIndent(deep);
-  const printerValue = checkValueType(value, deep);
-  const row = `+ ${name}: ${printerValue}`;
-  return `${indent.slice(2)}${row}`;
+  const indent = makeIndent(deep) + indentForProperty.added;
+  const printedValue = checkValueType(value, deep);
+  const row = `${name}: ${printedValue}`;
+  return `${indent}${row}`;
 };
 
-const getFormattedRemovedProperty = (key, deep) => {
+const getFormattedNodeRemoved = (key, deep) => {
   const {
     name,
     value,
   } = key;
 
-  const indent = makeIndent(deep);
-  const printerValue = checkValueType(value, deep);
-  const row = `- ${name}: ${printerValue}`;
-  return `${indent.slice(2)}${row}`;
+  const indent = makeIndent(deep) + indentForProperty.removed;
+  const printedValue = checkValueType(value, deep);
+  const row = `${name}: ${printedValue}`;
+  return `${indent}${row}`;
 };
 
-const getFormattedUpdatedProperty = (key, deep) => {
+const getFormattedNodeUpdated = (key, deep) => {
   const {
     name,
     valueBefore,
     valueAfter,
   } = key;
 
-  const indent = makeIndent(deep);
+  const valueBeforeIndent = makeIndent(deep) + indentForProperty.removed;
+  const valueAfterIndent = makeIndent(deep) + indentForProperty.added;
 
-  const printerValueBefore = checkValueType(valueBefore, deep);
-  const printerValueAfter = checkValueType(valueAfter, deep);
+  const printedValueBefore = checkValueType(valueBefore, deep);
+  const printedValueAfter = checkValueType(valueAfter, deep);
 
   const result = [];
 
-  const firstRow = `- ${name}: ${printerValueBefore}`;
-  const secondRow = `+ ${name}: ${printerValueAfter}`;
+  const firstRow = `${name}: ${printedValueBefore}`;
+  const secondRow = `${name}: ${printedValueAfter}`;
 
-  result.push(`${indent.slice(2)}${firstRow}`);
-  result.push(`${indent.slice(2)}${secondRow}`);
+  result.push(`${valueBeforeIndent}${firstRow}`);
+  result.push(`${valueAfterIndent}${secondRow}`);
   return result;
 };
 
-const mapTypeToPropertyFormatter = {
-  nested: getFormattedNestedProperty,
-  unchanged: getFormattedUnchangedProperty,
-  added: getFormattedAddedProperty,
-  removed: getFormattedRemovedProperty,
-  updated: getFormattedUpdatedProperty,
+const mapTypeToNodeFormatter = {
+  nested: getFormattedNodeNested,
+  unchanged: getFormattedNodeUnchanged,
+  added: getFormattedNodeAdded,
+  removed: getFormattedNodeRemoved,
+  updated: getFormattedNodeUpdated,
 };
 
 const genStylishFormattedDiff = (diffInfo) => {
-  const iter = (tree, deep) => {
-    const parts = tree.flatMap((key) => {
-      const { type } = key;
+  const iter = (nodes, deep) => {
+    const parts = nodes.flatMap((node) => {
+      const { type } = node;
 
-      const getFormattedProperty = mapTypeToPropertyFormatter[type];
-      return getFormattedProperty(key, deep, iter);
+      const getFormattedNode = mapTypeToNodeFormatter[type];
+      return getFormattedNode(node, deep, iter);
     });
-    const braceIndent = makeIndent(deep - 1);
+    const braceIndent = makeIndent(deep);
     return `{\n${parts.join('\n')}\n${braceIndent}}`;
   };
-
-  return iter(diffInfo, 1);
+  return iter(diffInfo, 0);
 };
 
 export default genStylishFormattedDiff;
