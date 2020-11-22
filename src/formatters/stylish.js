@@ -32,11 +32,11 @@ const checkValueType = (val, deep) => {
   return result;
 };
 
-const getFormattedNodeNested = (key, deep, iter) => {
+const getFormattedNodeNested = (node, deep, iter) => {
   const {
     name,
     children,
-  } = key;
+  } = node;
 
   const indent = makeIndent(deep) + indentForProperty.unchanged;
   const nested = iter(children, deep + 1);
@@ -44,11 +44,11 @@ const getFormattedNodeNested = (key, deep, iter) => {
   return `${indent}${row}`;
 };
 
-const getFormattedNodeUnchanged = (key, deep) => {
+const getFormattedNodeUnchanged = (node, deep) => {
   const {
     name,
     value,
-  } = key;
+  } = node;
 
   const indent = makeIndent(deep) + indentForProperty.unchanged;
   const printedValue = checkValueType(value, deep);
@@ -56,11 +56,11 @@ const getFormattedNodeUnchanged = (key, deep) => {
   return `${indent}${row}`;
 };
 
-const getFormattedNodeAdded = (key, deep) => {
+const getFormattedNodeAdded = (node, deep) => {
   const {
     name,
     value,
-  } = key;
+  } = node;
 
   const indent = makeIndent(deep) + indentForProperty.added;
   const printedValue = checkValueType(value, deep);
@@ -68,11 +68,11 @@ const getFormattedNodeAdded = (key, deep) => {
   return `${indent}${row}`;
 };
 
-const getFormattedNodeRemoved = (key, deep) => {
+const getFormattedNodeRemoved = (node, deep) => {
   const {
     name,
     value,
-  } = key;
+  } = node;
 
   const indent = makeIndent(deep) + indentForProperty.removed;
   const printedValue = checkValueType(value, deep);
@@ -80,12 +80,12 @@ const getFormattedNodeRemoved = (key, deep) => {
   return `${indent}${row}`;
 };
 
-const getFormattedNodeUpdated = (key, deep) => {
+const getFormattedNodeUpdated = (node, deep) => {
   const {
     name,
     valueBefore,
     valueAfter,
-  } = key;
+  } = node;
 
   const valueBeforeIndent = makeIndent(deep) + indentForProperty.removed;
   const valueAfterIndent = makeIndent(deep) + indentForProperty.added;
