@@ -1,8 +1,7 @@
 import _ from 'lodash';
 
 const getPathToProperty = (name, path) => {
-  const currentPath = _.cloneDeep(path);
-  currentPath.push(name);
+  const currentPath = [...path, name];
   const pathToProperty = `'${currentPath.join('.')}'`;
 
   return pathToProperty;
@@ -60,8 +59,7 @@ const getFormattedUpdatedProperty = (node, path) => {
 const getFormattedNestedProperty = (node, path, iter) => {
   const { name, children } = node;
 
-  const currentPath = _.cloneDeep(path);
-  currentPath.push(name);
+  const currentPath = [...path, name];
   const nested = iter(children, currentPath);
 
   return nested;
