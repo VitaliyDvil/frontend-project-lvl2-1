@@ -1,11 +1,11 @@
-import genJsonFormattedDiff from './json.js';
-import genPlainFormattedDiff from './plain.js';
-import genStylishFormattedDiff from './stylish.js';
+import getJsonOutput from './json.js';
+import getPlainOutput from './plain.js';
+import getStylishOutput from './stylish.js';
 
 const mapFormatToFormatter = {
-  json: genJsonFormattedDiff,
-  plain: genPlainFormattedDiff,
-  stylish: genStylishFormattedDiff,
+  json: getJsonOutput,
+  plain: getPlainOutput,
+  stylish: getStylishOutput,
 };
 
 const getFormatter = (formatterName) => mapFormatToFormatter[formatterName];

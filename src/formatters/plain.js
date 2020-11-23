@@ -60,9 +60,9 @@ const getFormattedUpdatedProperty = (node, path) => {
 const getFormattedNestedProperty = (node, path, iter) => {
   const { name, children } = node;
 
-  path.push(name);
-  const nested = iter(children, path);
-  path.pop();
+  const currentPath = _.cloneDeep(path);
+  currentPath.push(name);
+  const nested = iter(children, currentPath);
 
   return nested;
 };
@@ -75,14 +75,13 @@ const mapTypeToPropertyFormatter = {
   nested: getFormattedNestedProperty,
 };
 
-const genPlainFormattedDiff = (diffInfo) => {
+const getPlainOutput = (diffInfo) => {
   const iter = (nodes, path = []) => {
     const valueProperties = nodes.flatMap((node) => {
       const { type } = node;
 
       const getFormattedProperty = mapTypeToPropertyFormatter[type];
 
-      if (type === 'unchanged') return getFormattedProperty();
       return getFormattedProperty(node, path, iter);
     });
     return valueProperties.join('\n');
@@ -90,4 +89,4 @@ const genPlainFormattedDiff = (diffInfo) => {
   return iter(diffInfo);
 };
 
-export default genPlainFormattedDiff;
+export default getPlainOutput;

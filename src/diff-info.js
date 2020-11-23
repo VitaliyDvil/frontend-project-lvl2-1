@@ -1,5 +1,13 @@
 import _ from 'lodash';
 
+const keyType = {
+  NESTED: 'nested',
+  REMOVED: 'removed',
+  ADDED: 'added',
+  UNCHANGED: 'unchanged',
+  UPDATED: 'updated',
+};
+
 const getUnionSortedKeys = (before, after) => {
   const allkeys = _.union(_.keys(before), _.keys(after));
   return _.cloneDeep(allkeys).sort();
@@ -15,24 +23,24 @@ const buildDiffInfo = (before, after) => {
       return {
         name: key,
         children,
-        type: 'nested',
+        type: keyType.NESTED,
       };
     }
 
     if (!_.has(after, key)) {
-      return getNodeInfo(key, before[key], 'removed');
+      return getNodeInfo(key, before[key], keyType.REMOVED);
     }
     if (!_.has(before, key)) {
-      return getNodeInfo(key, after[key], 'added');
+      return getNodeInfo(key, after[key], keyType.ADDED);
     }
     if (_.isEqual(before[key], after[key])) {
-      return getNodeInfo(key, before[key], 'unchanged');
+      return getNodeInfo(key, before[key], keyType.UNCHANGED);
     }
     return {
       name: key,
       valueBefore: before[key],
       valueAfter: after[key],
-      type: 'updated',
+      type: keyType.UPDATED,
     };
   });
 };

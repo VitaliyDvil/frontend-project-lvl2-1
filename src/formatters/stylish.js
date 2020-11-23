@@ -2,7 +2,7 @@ import _ from 'lodash';
 
 const INDENT = '    ';
 
-const indentForProperty = {
+const mapPropertyToUniqIndent = {
   unchanged: INDENT,
   added: '  + ',
   removed: '  - ',
@@ -13,8 +13,8 @@ const makeIndent = (deep) => INDENT.repeat(deep);
 const stringifyValue = (obj, deep) => {
   const keys = Object.keys(obj);
   const rows = keys.map((key) => {
-    const indent = makeIndent(deep) + indentForProperty.unchanged;
-    if ((_.isObject(obj[key]))) {
+    const indent = makeIndent(deep) + mapPropertyToUniqIndent.unchanged;
+    if (_.isObject(obj[key])) {
       const value = stringifyValue(obj[key], deep + 1);
       return `${indent}${key}: ${value}`;
     }
@@ -32,86 +32,87 @@ const checkValueType = (val, deep) => {
   return result;
 };
 
-const getFormattedNodeNested = (node, deep, iter) => {
+const getFormattedNestedNode = (node, deep, iter) => {
   const {
     name,
     children,
   } = node;
 
-  const indent = makeIndent(deep) + indentForProperty.unchanged;
+  const indent = makeIndent(deep) + mapPropertyToUniqIndent.unchanged;
   const nested = iter(children, deep + 1);
   const row = `${name}: ${nested}`;
   return `${indent}${row}`;
 };
 
-const getFormattedNodeUnchanged = (node, deep) => {
+const getFormattedUnchangedNode = (node, deep) => {
   const {
     name,
     value,
   } = node;
 
-  const indent = makeIndent(deep) + indentForProperty.unchanged;
+  const indent = makeIndent(deep) + mapPropertyToUniqIndent.unchanged;
   const printedValue = checkValueType(value, deep);
   const row = `${name}: ${printedValue}`;
   return `${indent}${row}`;
 };
 
-const getFormattedNodeAdded = (node, deep) => {
+const getFormattedAddedNode = (node, deep) => {
   const {
     name,
     value,
   } = node;
 
-  const indent = makeIndent(deep) + indentForProperty.added;
+  const indent = makeIndent(deep) + mapPropertyToUniqIndent.added;
   const printedValue = checkValueType(value, deep);
   const row = `${name}: ${printedValue}`;
   return `${indent}${row}`;
 };
 
-const getFormattedNodeRemoved = (node, deep) => {
+const getFormattedRemovedNode = (node, deep) => {
   const {
     name,
     value,
   } = node;
 
-  const indent = makeIndent(deep) + indentForProperty.removed;
+  const indent = makeIndent(deep) + mapPropertyToUniqIndent.removed;
   const printedValue = checkValueType(value, deep);
   const row = `${name}: ${printedValue}`;
   return `${indent}${row}`;
 };
 
-const getFormattedNodeUpdated = (node, deep) => {
+const getFormattedUpdatedNode = (node, deep) => {
   const {
     name,
     valueBefore,
     valueAfter,
   } = node;
 
-  const valueBeforeIndent = makeIndent(deep) + indentForProperty.removed;
-  const valueAfterIndent = makeIndent(deep) + indentForProperty.added;
+  const valueBeforeIndent = makeIndent(deep) + mapPropertyToUniqIndent.removed;
+  const valueAfterIndent = makeIndent(deep) + mapPropertyToUniqIndent.added;
 
   const printedValueBefore = checkValueType(valueBefore, deep);
   const printedValueAfter = checkValueType(valueAfter, deep);
 
-  const result = [];
-
   const firstRow = `${name}: ${printedValueBefore}`;
   const secondRow = `${name}: ${printedValueAfter}`;
 
-  result.push(`${valueBeforeIndent}${firstRow}`);
-  result.push(`${valueAfterIndent}${secondRow}`);
+  const result = [
+    `${valueBeforeIndent}${firstRow}`,
+    `${valueAfterIndent}${secondRow}`,
+  ];
+
   return result;
 };
 
 const mapTypeToNodeFormatter = {
-  nested: getFormattedNodeNested,
-  unchanged: getFormattedNodeUnchanged,
-  added: getFormattedNodeAdded,
-  removed: getFormattedNodeRemoved,
-  updated: getFormattedNodeUpdated,
+  nested: getFormattedNestedNode,
+  unchanged: getFormattedUnchangedNode,
+  added: getFormattedAddedNode,
+  removed: getFormattedRemovedNode,
+  updated: getFormattedUpdatedNode,
 };
 
-const genStylishFormattedDiff = (diffInfo) => {
+const getStylishOutput = (diffInfo) => {
   const iter = (nodes, deep) => {
     const parts = nodes.flatMap((node) => {
       const { type } = node;
@@ -125,4 +126,4 @@ const genStylishFormattedDiff = (diffInfo) => {
   return iter(diffInfo, 0);
 };
 
-export default genStylishFormattedDiff;
+export default getStylishOutput;
