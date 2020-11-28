@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-const keyType = {
+const KeyType = {
   NESTED: 'nested',
   REMOVED: 'removed',
   ADDED: 'added',
@@ -23,24 +23,24 @@ const buildDiffInfo = (before, after) => {
       return {
         name: key,
         children,
-        type: keyType.NESTED,
+        type: KeyType.NESTED,
       };
     }
 
     if (!_.has(after, key)) {
-      return getNodeInfo(key, before[key], keyType.REMOVED);
+      return getNodeInfo(key, before[key], KeyType.REMOVED);
     }
     if (!_.has(before, key)) {
-      return getNodeInfo(key, after[key], keyType.ADDED);
+      return getNodeInfo(key, after[key], KeyType.ADDED);
     }
     if (_.isEqual(before[key], after[key])) {
-      return getNodeInfo(key, before[key], keyType.UNCHANGED);
+      return getNodeInfo(key, before[key], KeyType.UNCHANGED);
     }
     return {
       name: key,
       valueBefore: before[key],
       valueAfter: after[key],
-      type: keyType.UPDATED,
+      type: KeyType.UPDATED,
     };
   });
 };
