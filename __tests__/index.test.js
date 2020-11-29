@@ -1,4 +1,3 @@
-/* eslint-disable no-underscore-dangle */
 import path, { dirname } from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
@@ -14,17 +13,17 @@ const fileFormats = ['json', 'yaml', 'ini'];
 
 const outputFormatterTypes = ['stylish', 'plain', 'json'];
 
-describe.each(fileFormats)('gendiff call given two files %s format', (testingFileFormat) => {
-  outputFormatterTypes.forEach((outputFormatterType) => {
-    let pathFileBefore;
-    let pathFileAfter;
-    let expectedResult;
+let pathFileBefore;
+let pathFileAfter;
 
-    beforeEach(() => {
-      pathFileBefore = getFixturePath(`file-before.${testingFileFormat}`);
-      pathFileAfter = getFixturePath(`file-after.${testingFileFormat}`);
-      expectedResult = getResult(`${outputFormatterType}-result.txt`);
-    });
+describe.each(fileFormats)('gendiff call given two files %s format', (testingFileFormat) => {
+  beforeEach(() => {
+    pathFileBefore = getFixturePath(`fileBefore.${testingFileFormat}`);
+    pathFileAfter = getFixturePath(`fileAfter.${testingFileFormat}`);
+  });
+
+  outputFormatterTypes.forEach((outputFormatterType) => {
+    const expectedResult = getResult(`${outputFormatterType}Result.txt`);
 
     test(`output ${outputFormatterType} formatter should return expected result`, () => {
       const gendiffResult = genDiff(pathFileBefore, pathFileAfter, outputFormatterType);

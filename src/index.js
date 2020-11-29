@@ -1,7 +1,7 @@
-import buildDiffInfo from './diff-info.js';
+import buildDiffInfo from './diffInfo.js';
 import { readFile, getFileFormatName } from './utils.js';
-import getParser from './parsers/parser-selector.js';
-import getFormatter from './formatters/formatter-selector.js';
+import getParsedFile from './parsers/index.js';
+import getFormatterOutput from './formatters/index.js';
 
 const genDiff = (beforeFilePath, afterFilePath, outputFormat) => {
   const beforeFileContent = readFile(beforeFilePath);
@@ -10,17 +10,12 @@ const genDiff = (beforeFilePath, afterFilePath, outputFormat) => {
   const beforFileFormatName = getFileFormatName(beforeFilePath);
   const afterFileFormatName = getFileFormatName(afterFilePath);
 
-  const getParsedBeforeFile = getParser(beforFileFormatName);
-  const getParsedAfterFile = getParser(afterFileFormatName);
-
-  const parsedBeforeFile = getParsedBeforeFile(beforeFileContent);
-  const parsedAfterFile = getParsedAfterFile(afterFileContent);
+  const parsedBeforeFile = getParsedFile(beforeFileContent, beforFileFormatName);
+  const parsedAfterFile = getParsedFile(afterFileContent, afterFileFormatName);
 
   const diffInfo = buildDiffInfo(parsedBeforeFile, parsedAfterFile);
 
-  const getFormatterOutput = getFormatter(outputFormat);
-
-  return getFormatterOutput(diffInfo);
+  return getFormatterOutput(diffInfo, outputFormat);
 };
 
 export default genDiff;

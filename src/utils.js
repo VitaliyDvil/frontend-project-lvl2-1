@@ -1,6 +1,14 @@
 import fs from 'fs';
 import path from 'path';
 
+const KeyType = {
+  NESTED: 'nested',
+  REMOVED: 'removed',
+  ADDED: 'added',
+  UNCHANGED: 'unchanged',
+  UPDATED: 'updated',
+};
+
 const readFile = (relativeFilePath) => {
   const filePath = path.resolve(process.cwd(), relativeFilePath);
   const fileContent = fs.readFileSync(filePath, 'utf-8');
@@ -14,6 +22,7 @@ const getFileFormatName = (filePath) => {
 };
 
 export {
+  KeyType,
   readFile,
   getFileFormatName,
 };

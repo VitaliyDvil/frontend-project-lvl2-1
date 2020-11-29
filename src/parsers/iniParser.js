@@ -1,10 +1,8 @@
 import ini from 'ini';
 import _ from 'lodash';
 
-const BASE_NUMBER_SYSTEM = 10;
-
 const isNumber = (value) => {
-  if (parseInt(value, BASE_NUMBER_SYSTEM)) {
+  if (parseFloat(value)) {
     return true;
   }
   return false;
@@ -19,10 +17,12 @@ const formatValuesByType = (item) => {
       return acc;
     }, {});
   }
+
   if (isNumber(item)) {
     const newValue = Number(item);
     return newValue;
   }
+
   return item;
 };
 
