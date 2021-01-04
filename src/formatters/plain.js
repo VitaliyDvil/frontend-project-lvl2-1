@@ -9,7 +9,7 @@ const getPathToProperty = (name, path) => {
 
 const getStartOfSentence = (name, path, type) => {
   const pathProperty = getPathToProperty(name, path);
-  return `property ${pathProperty} was ${type}`;
+  return `Property ${pathProperty} was ${type}`;
 };
 
 const getPrintedValue = (value) => {
