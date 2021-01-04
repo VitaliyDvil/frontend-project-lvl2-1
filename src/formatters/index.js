@@ -10,9 +10,9 @@ const mapFormatToFormatter = {
 };
 
 const getFormatter = (diffInfo, outputFormat) => {
-  // if (!_.has(mapFormatToFormatter, outputFormat)) {
-  //   throw new Error(`${outputFormat} is unsupported`);
-  // }
+  if (!_.has(mapFormatToFormatter, outputFormat)) {
+    throw new Error(`${outputFormat} is unsupported`);
+  }
 
   const diffFormat = mapFormatToFormatter[outputFormat];
   return diffFormat(diffInfo);
