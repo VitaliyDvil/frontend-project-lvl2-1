@@ -10,12 +10,7 @@ const isNumber = (value) => {
 
 const formatValuesByType = (item) => {
   if (_.isObject(item)) {
-    const keys = _.keys(item);
-    return keys.reduce((acc, key) => {
-      const newValue = formatValuesByType(item[key]);
-      acc[key] = newValue;
-      return acc;
-    }, {});
+    return _.mapValues(item, formatValuesByType);
   }
 
   if (isNumber(item)) {
