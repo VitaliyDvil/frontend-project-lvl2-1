@@ -9,7 +9,7 @@ const __dirname = dirname(__filename);
 const getFixturePath = (filename) => path.join(__dirname, '..', '__fixtures__', filename);
 const getResult = (filename) => fs.readFileSync(getFixturePath(filename), 'utf-8');
 
-const fileFormats = ['json', 'yaml', 'ini'];
+const fileFormats = ['json', 'yml', 'ini'];
 
 const outputFormatterTypes = ['stylish', 'plain', 'json'];
 
