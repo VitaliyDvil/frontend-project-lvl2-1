@@ -3,7 +3,7 @@ import { readFile, getFileFormatName } from './utils.js';
 import getParsedFile from './parsers/index.js';
 import getFormatterOutput from './formatters/index.js';
 
-const genDiff = (beforeFilePath, afterFilePath, outputFormat) => {
+const genDiff = (beforeFilePath, afterFilePath, outputFormat = 'stylish') => {
   const beforeFileContent = readFile(beforeFilePath);
   const afterFileContent = readFile(afterFilePath);
 
