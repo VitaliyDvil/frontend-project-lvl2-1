@@ -13,16 +13,11 @@ const fileFormats = ['json', 'yml', 'ini'];
 
 const outputFormatterTypes = ['stylish', 'plain', 'json'];
 
-let pathFileBefore;
-let pathFileAfter;
-
 describe.each(fileFormats)('gendiff call given two files %s format', (testingFileFormat) => {
-  beforeEach(() => {
-    pathFileBefore = getFixturePath(`fileBefore.${testingFileFormat}`);
-    pathFileAfter = getFixturePath(`fileAfter.${testingFileFormat}`);
-  });
-
   outputFormatterTypes.forEach((outputFormatterType) => {
+    const pathFileBefore = getFixturePath(`fileBefore.${testingFileFormat}`);
+    const pathFileAfter = getFixturePath(`fileAfter.${testingFileFormat}`);
+
     const expectedResult = getResult(`${outputFormatterType}Result.txt`);
 
     test(`output ${outputFormatterType} formatter should return expected result`, () => {
